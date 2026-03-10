@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Blood Donor Finder</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script src="firebase.js"></script>
+<script src="app.js"></script>
+
+</head>
+
+<body>
+
+<h1>🩸 Blood Donor Finder</h1>
+
+<div class="container" id="loginDiv">
+
+<h2>Login</h2>
+
+<input id="username" placeholder="Username">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+</div>
+
+<div class="container" id="appDiv" style="display:none">
+
+<h2>Register Donor</h2>
+
+<input id="name" placeholder="Name">
+<input id="blood" placeholder="Blood Group">
+<input id="phone" placeholder="Phone">
+<input id="city" placeholder="City">
+
+<button onclick="addDonor()">Register Donor</button>
+
+<hr>
+
+<h2>Search Donor</h2>
+
+<input id="searchBlood" placeholder="Blood Group">
+
+<button onclick="searchDonor()">Search</button>
+
+<div id="results"></div>
+
+<button onclick="logout()">Logout</button>
+
+</div>
+
+<script>
+
+if ('serviceWorker' in navigator) {
+navigator.serviceWorker.register('sw.js');
+}
+
+</script>
+
+</body>
+</html>
