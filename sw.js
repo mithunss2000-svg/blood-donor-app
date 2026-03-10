@@ -1,7 +1,5 @@
-self.addEventListener('install', function(event) {
-    console.log('Service Worker installing.');
-});
+self.addEventListener("install",function(e){
 
-self.addEventListener('fetch', function(event) {
-    // optional: basic offline placeholder
+console.log("Service Worker installed");
+
 });

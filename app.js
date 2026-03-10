@@ -1,82 +1,144 @@
-const DEMO_USERNAME = "admin";
-const DEMO_PASSWORD = "1234";
+let map;
 
-// Login
-function login(){
-    let username = document.getElementById("username").value.trim();
-    let password = document.getElementById("password").value.trim();
+function initMap(){
 
-    if(username === DEMO_USERNAME && password === DEMO_PASSWORD){
-        alert("Login Successful!");
-        document.getElementById("loginDiv").style.display = "none";
-        document.getElementById("appDiv").style.display = "block";
-    } else {
-        alert("Wrong Username or Password!");
-    }
+map = new google.maps.Map(document.getElementById("map"),{
+
+zoom:10,
+center:{lat:8.8932,lng:76.6141}
+
+});
+
 }
 
-// Logout
-function logout(){
-    document.getElementById("loginDiv").style.display = "block";
-    document.getElementById("appDiv").style.display = "none";
-    document.getElementById("username").value = "";
-    document.getElementById("password").value = "";
-}
-
-// Register Donor
 function addDonor(){
-    let name = document.getElementById("name").value.trim();
-    let blood = document.getElementById("blood").value.trim();
-    let phone = document.getElementById("phone").value.trim();
-    let city = document.getElementById("city").value.trim();
 
-    if(name=="" || blood=="" || phone=="" || city==""){
-        alert("Please fill all fields");
-        return;
-    }
+let name=document.getElementById("name").value;
+let blood=document.getElementById("blood").value;
+let phone=document.getElementById("phone").value;
+let city=document.getElementById("city").value;
 
-    db.ref('donors').push({
-        name: name,
-        blood: blood,
-        phone: phone,
-        city: city
-    });
+navigator.geolocation.getCurrentPosition(function(pos){
 
-    alert("Donor Registered Successfully");
+let lat=pos.coords.latitude;
+let lon=pos.coords.longitude;
 
-    document.getElementById("name").value="";
-    document.getElementById("blood").value="";
-    document.getElementById("phone").value="";
-    document.getElementById("city").value="";
+db.ref("donors").push({
+
+name:name,
+blood:blood,
+phone:phone,
+city:city,
+lat:lat,
+lon:lon
+
+});
+
+alert("Donor registered");
+
+});
+
 }
 
-// Search Donor
 function searchDonor(){
-    let blood = document.getElementById("searchBlood").value.trim();
-    let results = document.getElementById("results");
-    results.innerHTML = "";
 
-    if(blood==""){
-        alert("Enter blood group to search");
-        return;
-    }
+let blood=document.getElementById("searchBlood").value;
+let city=document.getElementById("searchCity").value.toLowerCase();
 
-    db.ref('donors').orderByChild('blood').equalTo(blood).once('value', function(snapshot){
-        if(!snapshot.exists()){
-            results.innerHTML = "<p>No donors found</p>";
-            return;
-        }
+let results=document.getElementById("results");
+results.innerHTML="";
 
-        snapshot.forEach(function(childSnapshot){
-            let data = childSnapshot.val();
-            results.innerHTML += `
-                <div class="card">
-                    <h3>${data.name}</h3>
-                    <p>Blood: ${data.blood}</p>
-                    <p>City: ${data.city}</p>
-                    <p>Phone: ${data.phone}</p>
-                </div>
-            `;
-        });
-    });
+db.ref("donors").once("value",function(snapshot){
+
+snapshot.forEach(function(child){
+
+let d=child.val();
+
+if(d.blood==blood && d.city.toLowerCase()==city){
+
+results.innerHTML+=`
+<div class="card">
+
+<h3>${d.name}</h3>
+<p>Blood: ${d.blood}</p>
+<p>City: ${d.city}</p>
+<p>Phone: ${d.phone}</p>
+
+<a href="tel:${d.phone}">
+<button>📞 Call Donor</button>
+</a>
+
+</div>
+`;
+
+}
+
+});
+
+});
+
+}
+
+function findNearbyDonors(){
+
+navigator.geolocation.getCurrentPosition(function(pos){
+
+let userLat=pos.coords.latitude;
+let userLon=pos.coords.longitude;
+
+map.setCenter({lat:userLat,lng:userLon});
+
+new google.maps.Marker({
+
+position:{lat:userLat,lng:userLon},
+map:map,
+title:"You are here"
+
+});
+
+db.ref("donors").once("value",function(snapshot){
+
+snapshot.forEach(function(child){
+
+let d=child.val();
+
+let distance=getDistance(userLat,userLon,d.lat,d.lon);
+
+if(distance<20){
+
+new google.maps.Marker({
+
+position:{lat:d.lat,lng:d.lon},
+map:map,
+title:d.name+" "+d.blood
+
+});
+
+}
+
+});
+
+});
+
+});
+
+}
+
+function getDistance(lat1,lon1,lat2,lon2){
+
+let R=6371;
+
+let dLat=(lat2-lat1)*Math.PI/180;
+let dLon=(lon2-lon1)*Math.PI/180;
+
+let a=
+Math.sin(dLat/2)*Math.sin(dLat/2)+
+Math.cos(lat1*Math.PI/180)*
+Math.cos(lat2*Math.PI/180)*
+Math.sin(dLon/2)*Math.sin(dLon/2);
+
+let c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+
+return R*c;
+
 }
