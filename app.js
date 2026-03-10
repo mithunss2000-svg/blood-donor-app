@@ -26,7 +26,7 @@ lon:lon
 
 });
 
-alert("Donor Registered");
+alert("Donor Registered Successfully");
 
 });
 
@@ -61,11 +61,11 @@ results.innerHTML+=`
 <p>Phone: ${d.phone}</p>
 
 <a href="tel:${d.phone}">
-<button>📞 Call Donor</button>
+<button>📞 Call</button>
 </a>
 
 <a href="https://www.google.com/maps?q=${d.lat},${d.lon}" target="_blank">
-<button>🧭 Open Location</button>
+<button>🧭 Location</button>
 </a>
 
 </div>
@@ -114,11 +114,11 @@ results.innerHTML+=`
 <p>Phone: ${d.phone}</p>
 
 <a href="tel:${d.phone}">
-<button>📞 Call Donor</button>
+<button>📞 Call</button>
 </a>
 
 <a href="https://www.google.com/maps?q=${d.lat},${d.lon}" target="_blank">
-<button>🧭 Open Location</button>
+<button>🧭 Location</button>
 </a>
 
 </div>
