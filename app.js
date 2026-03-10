@@ -1,22 +1,14 @@
-let map;
-
-function initMap(){
-
-map = new google.maps.Map(document.getElementById("map"),{
-
-zoom:10,
-center:{lat:8.8932,lng:76.6141}
-
-});
-
-}
-
 function addDonor(){
 
 let name=document.getElementById("name").value;
 let blood=document.getElementById("blood").value;
 let phone=document.getElementById("phone").value;
 let city=document.getElementById("city").value;
+
+if(name==""||blood==""||phone==""||city==""){
+alert("Please fill all fields");
+return;
+}
 
 navigator.geolocation.getCurrentPosition(function(pos){
 
@@ -34,7 +26,7 @@ lon:lon
 
 });
 
-alert("Donor registered");
+alert("Donor Registered");
 
 });
 
@@ -46,6 +38,7 @@ let blood=document.getElementById("searchBlood").value;
 let city=document.getElementById("searchCity").value.toLowerCase();
 
 let results=document.getElementById("results");
+
 results.innerHTML="";
 
 db.ref("donors").once("value",function(snapshot){
@@ -60,12 +53,19 @@ results.innerHTML+=`
 <div class="card">
 
 <h3>${d.name}</h3>
+
 <p>Blood: ${d.blood}</p>
+
 <p>City: ${d.city}</p>
+
 <p>Phone: ${d.phone}</p>
 
 <a href="tel:${d.phone}">
 <button>📞 Call Donor</button>
+</a>
+
+<a href="https://www.google.com/maps?q=${d.lat},${d.lon}" target="_blank">
+<button>🧭 Open Location</button>
 </a>
 
 </div>
@@ -86,15 +86,9 @@ navigator.geolocation.getCurrentPosition(function(pos){
 let userLat=pos.coords.latitude;
 let userLon=pos.coords.longitude;
 
-map.setCenter({lat:userLat,lng:userLon});
+let results=document.getElementById("results");
 
-new google.maps.Marker({
-
-position:{lat:userLat,lng:userLon},
-map:map,
-title:"You are here"
-
-});
+results.innerHTML="<h3>Nearby Donors</h3>";
 
 db.ref("donors").once("value",function(snapshot){
 
@@ -106,13 +100,29 @@ let distance=getDistance(userLat,userLon,d.lat,d.lon);
 
 if(distance<20){
 
-new google.maps.Marker({
+results.innerHTML+=`
+<div class="card">
 
-position:{lat:d.lat,lng:d.lon},
-map:map,
-title:d.name+" "+d.blood
+<h3>${d.name}</h3>
 
-});
+<p>Blood: ${d.blood}</p>
+
+<p>City: ${d.city}</p>
+
+<p>Distance: ${distance.toFixed(1)} km</p>
+
+<p>Phone: ${d.phone}</p>
+
+<a href="tel:${d.phone}">
+<button>📞 Call Donor</button>
+</a>
+
+<a href="https://www.google.com/maps?q=${d.lat},${d.lon}" target="_blank">
+<button>🧭 Open Location</button>
+</a>
+
+</div>
+`;
 
 }
 

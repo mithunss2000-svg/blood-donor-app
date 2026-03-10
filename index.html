@@ -8,8 +8,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="style.css">
-<link rel="manifest" href="manifest.json">
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -29,7 +29,7 @@
 <input id="name" placeholder="Name">
 
 <select id="blood">
-<option value="">Select Blood Group</option>
+<option value="">Blood Group</option>
 <option>A+</option>
 <option>A-</option>
 <option>B+</option>
@@ -40,7 +40,7 @@
 <option>AB-</option>
 </select>
 
-<input id="phone" placeholder="Phone">
+<input id="phone" placeholder="Phone Number">
 
 <input id="city" placeholder="City">
 
@@ -51,7 +51,7 @@
 <h2>Search Donor</h2>
 
 <select id="searchBlood">
-<option value="">Select Blood Group</option>
+<option value="">Blood Group</option>
 <option>A+</option>
 <option>A-</option>
 <option>B+</option>
@@ -70,19 +70,8 @@
 
 <div id="results"></div>
 
-<div id="map"></div>
-
 </div>
 
-<script>
-
-if ('serviceWorker' in navigator) {
-navigator.serviceWorker.register('sw.js');
-}
-
-</script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAP_KEY&callback=initMap" async defer></script>
-
 </body>
+
 </html>
