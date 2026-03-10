@@ -1,19 +1,22 @@
 function addDonor(){
 
-let name=document.getElementById("name").value;
-let blood=document.getElementById("blood").value;
-let phone=document.getElementById("phone").value;
-let city=document.getElementById("city").value;
+let name = document.getElementById("name").value;
+let blood = document.getElementById("blood").value;
+let phone = document.getElementById("phone").value;
+let city = document.getElementById("city").value;
 
-if(name==""||blood==""||phone==""||city==""){
+if(name=="" || blood=="" || phone=="" || city==""){
+
 alert("Please fill all fields");
+
 return;
+
 }
 
-navigator.geolocation.getCurrentPosition(function(pos){
+navigator.geolocation.getCurrentPosition(function(position){
 
-let lat=pos.coords.latitude;
-let lon=pos.coords.longitude;
+let lat = position.coords.latitude;
+let lon = position.coords.longitude;
 
 db.ref("donors").push({
 
@@ -28,16 +31,23 @@ lon:lon
 
 alert("Donor Registered Successfully");
 
+document.getElementById("name").value="";
+document.getElementById("blood").value="";
+document.getElementById("phone").value="";
+document.getElementById("city").value="";
+
 });
 
 }
 
+
+
 function searchDonor(){
 
-let blood=document.getElementById("searchBlood").value;
-let city=document.getElementById("searchCity").value.toLowerCase();
+let blood = document.getElementById("searchBlood").value;
+let city = document.getElementById("searchCity").value.toLowerCase();
 
-let results=document.getElementById("results");
+let results = document.getElementById("results");
 
 results.innerHTML="";
 
@@ -45,11 +55,12 @@ db.ref("donors").once("value",function(snapshot){
 
 snapshot.forEach(function(child){
 
-let d=child.val();
+let d = child.val();
 
 if(d.blood==blood && d.city.toLowerCase()==city){
 
-results.innerHTML+=`
+results.innerHTML += `
+
 <div class="card">
 
 <h3>${d.name}</h3>
@@ -65,10 +76,11 @@ results.innerHTML+=`
 </a>
 
 <a href="https://www.google.com/maps?q=${d.lat},${d.lon}" target="_blank">
-<button>🧭 Location</button>
+<button>📍 Location</button>
 </a>
 
 </div>
+
 `;
 
 }
@@ -79,14 +91,16 @@ results.innerHTML+=`
 
 }
 
+
+
 function findNearbyDonors(){
 
-navigator.geolocation.getCurrentPosition(function(pos){
+navigator.geolocation.getCurrentPosition(function(position){
 
-let userLat=pos.coords.latitude;
-let userLon=pos.coords.longitude;
+let userLat = position.coords.latitude;
+let userLon = position.coords.longitude;
 
-let results=document.getElementById("results");
+let results = document.getElementById("results");
 
 results.innerHTML="<h3>Nearby Donors</h3>";
 
@@ -94,13 +108,14 @@ db.ref("donors").once("value",function(snapshot){
 
 snapshot.forEach(function(child){
 
-let d=child.val();
+let d = child.val();
 
-let distance=getDistance(userLat,userLon,d.lat,d.lon);
+let distance = getDistance(userLat,userLon,d.lat,d.lon);
 
-if(distance<20){
+if(distance < 20){
 
-results.innerHTML+=`
+results.innerHTML += `
+
 <div class="card">
 
 <h3>${d.name}</h3>
@@ -118,10 +133,11 @@ results.innerHTML+=`
 </a>
 
 <a href="https://www.google.com/maps?q=${d.lat},${d.lon}" target="_blank">
-<button>🧭 Location</button>
+<button>📍 Location</button>
 </a>
 
 </div>
+
 `;
 
 }
@@ -134,20 +150,26 @@ results.innerHTML+=`
 
 }
 
+
+
 function getDistance(lat1,lon1,lat2,lon2){
 
-let R=6371;
+let R = 6371;
 
-let dLat=(lat2-lat1)*Math.PI/180;
-let dLon=(lon2-lon1)*Math.PI/180;
+let dLat = (lat2-lat1)*Math.PI/180;
+let dLon = (lon2-lon1)*Math.PI/180;
 
-let a=
-Math.sin(dLat/2)*Math.sin(dLat/2)+
-Math.cos(lat1*Math.PI/180)*
-Math.cos(lat2*Math.PI/180)*
+let a =
+
+Math.sin(dLat/2)*Math.sin(dLat/2) +
+
+Math.cos(lat1*Math.PI/180) *
+
+Math.cos(lat2*Math.PI/180) *
+
 Math.sin(dLon/2)*Math.sin(dLon/2);
 
-let c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+let c = 2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 
 return R*c;
 
