@@ -1,25 +1,28 @@
 function addDonor(){
 
-var name=document.getElementById("name").value;
-var blood=document.getElementById("blood").value;
-var phone=document.getElementById("phone").value;
-var city=document.getElementById("city").value;
+let name=document.getElementById("name").value.trim();
+let blood=document.getElementById("blood").value.trim();
+let phone=document.getElementById("phone").value.trim();
+let city=document.getElementById("city").value.trim();
 
 if(name==""||blood==""||phone==""||city==""){
-alert("Fill all fields");
+alert("Please fill all fields");
 return;
 }
 
 db.ref("donors").push({
-
 name:name,
 blood:blood,
 phone:phone,
 city:city
-
 });
 
-alert("Donor Added");
+alert("Donor Registered");
+
+document.getElementById("name").value="";
+document.getElementById("blood").value="";
+document.getElementById("phone").value="";
+document.getElementById("city").value="";
 
 }
 
@@ -27,19 +30,27 @@ alert("Donor Added");
 
 function searchDonor(){
 
-var blood=document.getElementById("searchBlood").value;
+let blood=document.getElementById("searchBlood").value.trim();
 
-var results=document.getElementById("results");
+let results=document.getElementById("results");
 
 results.innerHTML="";
 
-db.ref("donors").once("value",function(snapshot){
+if(blood==""){
+alert("Enter blood group");
+return;
+}
+
+db.ref("donors").orderByChild("blood").equalTo(blood).once("value",function(snapshot){
+
+if(!snapshot.exists()){
+results.innerHTML="<p>No donors found</p>";
+return;
+}
 
 snapshot.forEach(function(child){
 
-var d=child.val();
-
-if(d.blood==blood){
+let d=child.val();
 
 results.innerHTML+=`
 
@@ -53,11 +64,13 @@ results.innerHTML+=`
 
 <p>Phone: ${d.phone}</p>
 
+<a href="tel:${d.phone}">
+<button>📞 Call</button>
+</a>
+
 </div>
 
 `;
-
-}
 
 });
 
@@ -68,7 +81,5 @@ results.innerHTML+=`
 
 
 function findNearbyDonors(){
-
-alert("Near Me feature working (location enabled)");
-
+alert("Near Me feature coming next");
 }
