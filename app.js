@@ -1,85 +1,107 @@
+const DEMO_USERNAME = "admin";
+const DEMO_PASSWORD = "1234";
+
+function login(){
+
+    let username = document.getElementById("username").value.trim();
+    let password = document.getElementById("password").value.trim();
+
+    if(username === DEMO_USERNAME && password === DEMO_PASSWORD){
+
+        alert("Login Successful!");
+
+        document.getElementById("loginDiv").style.display = "none";
+        document.getElementById("appDiv").style.display = "block";
+
+    } else {
+
+        alert("Wrong Username or Password!");
+
+    }
+
+}
+
+function logout(){
+
+    document.getElementById("loginDiv").style.display = "block";
+    document.getElementById("appDiv").style.display = "none";
+
+}
+
 function addDonor(){
 
-let name=document.getElementById("name").value.trim();
-let blood=document.getElementById("blood").value.trim();
-let phone=document.getElementById("phone").value.trim();
-let city=document.getElementById("city").value.trim();
+    let name = document.getElementById("name").value.trim();
+    let blood = document.getElementById("blood").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let city = document.getElementById("city").value.trim();
 
-if(name==""||blood==""||phone==""||city==""){
-alert("Please fill all fields");
-return;
+    if(name=="" || blood=="" || phone=="" || city==""){
+
+        alert("Please fill all fields");
+        return;
+
+    }
+
+    db.ref("donors").push({
+
+        name: name,
+        blood: blood,
+        phone: phone,
+        city: city
+
+    });
+
+    alert("Donor Registered Successfully");
+
+    document.getElementById("name").value="";
+    document.getElementById("blood").value="";
+    document.getElementById("phone").value="";
+    document.getElementById("city").value="";
+
 }
-
-db.ref("donors").push({
-name:name,
-blood:blood,
-phone:phone,
-city:city
-});
-
-alert("Donor Registered");
-
-document.getElementById("name").value="";
-document.getElementById("blood").value="";
-document.getElementById("phone").value="";
-document.getElementById("city").value="";
-
-}
-
-
 
 function searchDonor(){
 
-let blood=document.getElementById("searchBlood").value.trim();
+    let blood = document.getElementById("searchBlood").value.trim();
 
-let results=document.getElementById("results");
+    let results = document.getElementById("results");
 
-results.innerHTML="";
+    results.innerHTML = "";
 
-if(blood==""){
-alert("Enter blood group");
-return;
-}
+    if(blood==""){
 
-db.ref("donors").orderByChild("blood").equalTo(blood).once("value",function(snapshot){
+        alert("Enter blood group to search");
+        return;
 
-if(!snapshot.exists()){
-results.innerHTML="<p>No donors found</p>";
-return;
-}
+    }
 
-snapshot.forEach(function(child){
+    db.ref("donors")
+    .orderByChild("blood")
+    .equalTo(blood)
+    .once("value", function(snapshot){
 
-let d=child.val();
+        if(!snapshot.exists()){
 
-results.innerHTML+=`
+            results.innerHTML = "<p>No donors found</p>";
+            return;
 
-<div class="card">
+        }
 
-<h3>${d.name}</h3>
+        snapshot.forEach(function(childSnapshot){
 
-<p>Blood: ${d.blood}</p>
+            let data = childSnapshot.val();
 
-<p>City: ${d.city}</p>
+            results.innerHTML += `
+            <div class="card">
+                <h3>${data.name}</h3>
+                <p>Blood: ${data.blood}</p>
+                <p>City: ${data.city}</p>
+                <p>Phone: ${data.phone}</p>
+            </div>
+            `;
 
-<p>Phone: ${d.phone}</p>
+        });
 
-<a href="tel:${d.phone}">
-<button>📞 Call</button>
-</a>
+    });
 
-</div>
-
-`;
-
-});
-
-});
-
-}
-
-
-
-function findNearbyDonors(){
-alert("Near Me feature coming next");
 }

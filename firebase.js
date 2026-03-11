@@ -1,13 +1,15 @@
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyCvp1Rq8D5ytM5MWi8wnYZuOW_zZzVneZk",
+  authDomain: "blood-donor-app-95429.firebaseapp.com",
+  databaseURL: "https://blood-donor-app-95429-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "blood-donor-app-95429",
+  storageBucket: "blood-donor-app-95429.appspot.com",
+  messagingSenderId: "733818304553",
+  appId: "1:733818304553:web:48399afc5f6ac77d738438"
 };
 
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-var db = firebase.database();
+// Database reference
+const db = firebase.database();

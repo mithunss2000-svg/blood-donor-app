@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
 <title>Blood Donor Finder</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="blood-drop.png">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script src="firebase.js"></script>
+<script src="app.js"></script>
 
 </head>
 
@@ -13,16 +23,24 @@
 
 <h1>🩸 Blood Donor Finder</h1>
 
-<div class="container">
+<div class="container" id="loginDiv">
+
+<h2>Login</h2>
+
+<input id="username" placeholder="Username">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+</div>
+
+<div class="container" id="appDiv" style="display:none">
 
 <h2>Register Donor</h2>
 
 <input id="name" placeholder="Name">
-
 <input id="blood" placeholder="Blood Group (A+,B+,O+)">
-
-<input id="phone" placeholder="Phone Number">
-
+<input id="phone" placeholder="Phone">
 <input id="city" placeholder="City">
 
 <button onclick="addDonor()">Register Donor</button>
@@ -31,26 +49,23 @@
 
 <h2>Search Donor</h2>
 
-<input id="searchBlood" placeholder="Enter Blood Group">
+<input id="searchBlood" placeholder="Blood Group">
 
 <button onclick="searchDonor()">Search</button>
 
-<button onclick="findNearbyDonors()">📍 Near Me</button>
-
 <div id="results"></div>
+
+<button onclick="logout()">Logout</button>
 
 </div>
 
+<script>
 
-<!-- Firebase -->
+if ('serviceWorker' in navigator) {
+navigator.serviceWorker.register('sw.js');
+}
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-<script src="firebase.js"></script>
-
-<script src="app.js"></script>
+</script>
 
 </body>
 </html>
